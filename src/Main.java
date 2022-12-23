@@ -30,7 +30,7 @@ public class Main {
             }
             Chessgamebegin mainFrame = null;
             try {
-                mainFrame = new Chessgamebegin(720, 720);
+                mainFrame = new Chessgamebegin(1000, 720);
             } catch (UnsupportedAudioFileException e) {
                 throw new RuntimeException(e);
             } catch (IOException e) {

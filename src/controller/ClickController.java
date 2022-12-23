@@ -7,6 +7,7 @@ import chessComponent.EmptySlotComponent;
 import model.ChessColor;
 import view.ChessGameFrame;
 import view.Chessboard;
+import view.MusicPlayer2;
 
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
@@ -17,6 +18,8 @@ import java.io.IOException;
 public class ClickController {
     private final Chessboard chessboard;
     private SquareComponent first;
+    static MusicPlayer2 player = new MusicPlayer2("D:\\IntelliJ IDEA Projects\\DarkChess3\\DarkChess2\\src\\e.wav");
+    static MusicPlayer2 player1 = new MusicPlayer2("D:\\IntelliJ IDEA Projects\\DarkChess3\\DarkChess2\\src\\f.wav");
 
     public ClickController(Chessboard chessboard) {
         this.chessboard = chessboard;
@@ -26,10 +29,11 @@ public class ClickController {
         //判断第一次点击
         if (first == null) {
             if (!(squareComponent instanceof EmptySlotComponent)){
-            if (handleFirst(squareComponent)) {
+            if (handleFirst(squareComponent)&&!squareComponent.isIscheating()) {
                 squareComponent.setSelected(true);
                 first = squareComponent;
                 first.repaint();
+                Chessboard.willmove(first);
             }
             }
         } else {//第二次
@@ -38,14 +42,27 @@ public class ClickController {
                 SquareComponent recordFirst = first;
                 first = null;
                 recordFirst.repaint();
-            } else if (handleSecond(squareComponent)) {
+                Chessboard.willnotmove(recordFirst);
+            } else if (handleSecond(squareComponent)&&!squareComponent.isIscheating()) {
                 //repaint in swap chess method.
                 if (Math.abs(first.getPower())>=squareComponent.getPower()||first.getPower()-squareComponent.getPower()==-5){
+                    if(!(squareComponent instanceof EmptySlotComponent)) {
+                        if (chessboard.getCurrentColor()==ChessColor.RED) {
+                            player.over();
+                            player.play();
+                        } else {
+                            player1.over();
+                            player1.play();
+                        }
+                    }
+                    Chessboard.willnotmove(first);
                     chessboard.swapChessComponents(first, squareComponent);
                     ChessGameFrame.CurrentBoard.add(chessboard.turnChessToIndex());
                     chessboard.clickController.swapPlayer();
+
                     first.setSelected(false);
                     first = null;
+
                 }
             }
         }

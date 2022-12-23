@@ -23,17 +23,18 @@ import static view.ChessGameFrame.*;
  */
 public class Chessboard extends JComponent {
 
-    static MusicPlayer player = new MusicPlayer("./src/b.wav");
-    static MusicPlayer player1 = new MusicPlayer("./src/d.wav");
-    static MusicPlayer player2 = new MusicPlayer("./src/d.wav");
+    static MusicPlayer player = new MusicPlayer("D:\\IntelliJ IDEA Projects\\DarkChess3\\DarkChess2\\src\\b.wav");
+    static MusicPlayer player1 = new MusicPlayer("D:\\IntelliJ IDEA Projects\\DarkChess3\\DarkChess2\\src\\d.wav");
+    static MusicPlayer player2 = new MusicPlayer("D:\\IntelliJ IDEA Projects\\DarkChess3\\DarkChess2\\src\\c.wav");
+    static MusicPlayer2 player3 = new MusicPlayer2("D:\\IntelliJ IDEA Projects\\DarkChess3\\DarkChess2\\src\\g.wav");
     boolean f1=true;
     boolean f2=true;
     private static final int ROW_SIZE = 8;
     private static final int COL_SIZE = 4;
 
-    private final SquareComponent[][] squareComponents = new SquareComponent[ROW_SIZE][COL_SIZE];
+    private static final SquareComponent[][] squareComponents = new SquareComponent[ROW_SIZE][COL_SIZE];
     //todo: you can change the initial player
-    private ChessColor currentColor = ChessColor.RED;
+    private static ChessColor currentColor = ChessColor.RED;
 
     //all chessComponents in this chessboard are shared only one model controller
     public final ClickController clickController = new ClickController(this);
@@ -166,29 +167,39 @@ public class Chessboard extends JComponent {
         ChangeShownScore();
         ChangeShownDiedChess();
 
-        if ((getRedScore()>=20||getBlackScore()>=20)&&f1){
+
+        if ((getRedScore()>=20||getBlackScore()>=20)&&f1&&getRedScore()<40&&getBlackScore()<40){
             f1=false;
             player.over();
+            player2.over();
             player1.setVolumn(6f).play();
         }
         if ((getRedScore()>=40||getBlackScore()>=40)&&f2){
             f2=false;
+            player.over();
             player1.over();
             player2.setVolumn(6f).play();
         }
+
         if (getRedScore()>=60){
+            player.over();
+            player1.over();
             player2.over();
+            player3.setVolumn(6f).play();
             System.out.println("Replay");
             JOptionPane.showMessageDialog(this, "红方赢！");
-            ChessGameFrameWin mainFrame = new ChessGameFrameWin(720, 720);
+            ChessGameFrameWin mainFrame = new ChessGameFrameWin(1010, 720);
             mainFrame.setVisible(true);
         }
 
         if (getBlackScore()>=60) {
+            player.over();
+            player1.over();
             player2.over();
+            player3.setVolumn(6f).play();
             System.out.println("Replay");
             JOptionPane.showMessageDialog(this, "黑方赢！");
-            ChessGameFrameWin mainFrame = new ChessGameFrameWin(720, 720);
+            ChessGameFrameWin mainFrame = new ChessGameFrameWin(1010, 720);
             mainFrame.setVisible(true);
         }
 
@@ -513,6 +524,7 @@ public class Chessboard extends JComponent {
         if (checkChessNumIsOk&&checkCurrentPlayerExist&&checkBoardForm&&checkStepsIsOk){
             ChessGameFrame.setRedScore(0);
             ChessGameFrame.setBlackScore(0);
+            Chessgamebegin.setCounter(0);
             ChessGameFrame.setDiedBlackGeneral(0);
             ChessGameFrame.setDiedBlackAdvisor(0);
             ChessGameFrame.setDiedBlackMinister(0);
@@ -644,5 +656,79 @@ public class Chessboard extends JComponent {
             }
         }
         return chessIndexS;
+    }
+    //private final SquareComponent[][] squareComponents = new SquareComponent[ROW_SIZE][COL_SIZE];
+    public static void Ischeating(){
+        for(int i=0;i<ROW_SIZE;i++)
+            for(int j=0;j<COL_SIZE;j++){
+                squareComponents[i][j].setIscheating(true);
+                if(squareComponents[i][j].isReversal()==false)
+                squareComponents[i][j].setReversalcheat(true);
+            }
+    }
+    public static void Isnotcheating(){
+        for(int i=0;i<ROW_SIZE;i++)
+            for(int j=0;j<COL_SIZE;j++){
+                if(squareComponents[i][j].isReversalcheat()==true){
+                    squareComponents[i][j].setReversal(false);
+                    squareComponents[i][j].setReversalcheat(false);
+                    squareComponents[i][j].repaint();
+                }
+                squareComponents[i][j].setIscheating(false);
+            }
+    }
+    public static void willmove(SquareComponent squareComponent){
+        for(int i=0;i<ROW_SIZE;i++)
+            for(int j=0;j<COL_SIZE;j++){
+                if(squareComponents[i][j].getChessColor() != currentColor &&
+                        squareComponent.canMoveTo(squareComponents, squareComponents[i][j].getChessboardPoint())){
+                    if (Math.abs(squareComponent.getPower())>=squareComponents[i][j].getPower()||squareComponent.getPower()-squareComponents[i][j].getPower()==-5){
+                        squareComponents[i][j].setIfcanmove(true);
+                        squareComponents[i][j].repaint();
+                    }
+                }
+                if(squareComponent instanceof CannonChessComponent){
+                    if(!squareComponents[i][j].isReversal()){
+                       if(squareComponent.canMoveTo(squareComponents, squareComponents[i][j].getChessboardPoint())){
+                           squareComponents[i][j].setIfcanmove(true);
+                           squareComponents[i][j].repaint();
+                       }
+                    }
+                    else{
+                        if(squareComponents[i][j].getChessColor() != currentColor &&
+                                squareComponent.canMoveTo(squareComponents, squareComponents[i][j].getChessboardPoint())){
+                                squareComponents[i][j].setIfcanmove(true);
+                                squareComponents[i][j].repaint();
+                            }
+                        }
+                    }
+                }
+    }
+    public static void willnotmove(SquareComponent squareComponent){
+        for(int i=0;i<ROW_SIZE;i++)
+            for(int j=0;j<COL_SIZE;j++){
+                if(squareComponents[i][j].getChessColor() != currentColor &&
+                        squareComponent.canMoveTo(squareComponents, squareComponents[i][j].getChessboardPoint())){
+                    if (Math.abs(squareComponent.getPower())>=squareComponents[i][j].getPower()||squareComponent.getPower()-squareComponents[i][j].getPower()==-5){
+                        squareComponents[i][j].setIfcanmove(false);
+                        squareComponents[i][j].repaint();
+                    }
+                }
+                if(squareComponent instanceof CannonChessComponent){
+                    if(!squareComponents[i][j].isReversal()){
+                        if(squareComponent.canMoveTo(squareComponents, squareComponents[i][j].getChessboardPoint())){
+                            squareComponents[i][j].setIfcanmove(false);
+                            squareComponents[i][j].repaint();
+                        }
+                    }
+                    else{
+                        if(squareComponents[i][j].getChessColor() != currentColor &&
+                                squareComponent.canMoveTo(squareComponents, squareComponents[i][j].getChessboardPoint())){
+                            squareComponents[i][j].setIfcanmove(false);
+                            squareComponents[i][j].repaint();
+                        }
+                    }
+                }
+            }
     }
 }

@@ -33,6 +33,35 @@ public abstract class SquareComponent extends JComponent {
     private ChessboardPoint chessboardPoint;
     protected final ChessColor chessColor;
     protected boolean isReversal;
+
+    public boolean isIfcanmove() {
+        return ifcanmove;
+    }
+
+    public void setIfcanmove(boolean ifcanmove) {
+        this.ifcanmove = ifcanmove;
+    }
+
+    protected boolean ifcanmove;
+    public boolean isReversalcheat() {
+        return isReversalcheat;
+    }
+
+    public void setReversalcheat(boolean reversalcheat) {
+        isReversalcheat = reversalcheat;
+    }
+
+    protected boolean isReversalcheat;
+
+    public boolean isIscheating() {
+        return ischeating;
+    }
+
+    public void setIscheating(boolean ischeating) {
+        this.ischeating = ischeating;
+    }
+
+    protected boolean ischeating;
     private boolean selected;
     protected int power;//power的绝对值大的可以吃掉power绝对值小的
     protected int score=0;
@@ -50,6 +79,9 @@ public abstract class SquareComponent extends JComponent {
         this.selected = false;
         this.clickController = clickController;
         this.isReversal = false;
+        this.isReversalcheat=false;
+        this.ischeating=false;
+        this.ifcanmove=false;
     }
 
     public boolean isReversal() {

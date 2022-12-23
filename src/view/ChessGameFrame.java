@@ -1,10 +1,14 @@
 package view;
 
+import chessComponent.SquareComponent;
 import controller.GameController;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * 这个类表示游戏窗体，窗体上包含：
@@ -20,6 +24,8 @@ public class ChessGameFrame extends JFrame {
     private static JLabel statusLabel;
     private static JLabel redScoreLabel;
     private static JLabel blackScoreLabel;
+    private static JLabel timeLabel;
+    private static int counter=0;
     private static JLabel label1;
     private static JLabel label2;
     private static JLabel label3;
@@ -75,6 +81,8 @@ public class ChessGameFrame extends JFrame {
         addRegretButton();
         addChessboard();
         addLabel();
+        addTimeLabel();
+        addCheatingButton();
 //        addHelloButton();
 
         addRedScoreLabel();
@@ -102,6 +110,7 @@ public class ChessGameFrame extends JFrame {
     }
 
 
+
 //    private void addchessboardbackground() {
 //        ImageIcon picture=new ImageIcon("E:\\e.jpg");
 //        JLabel label=new JLabel(picture);
@@ -111,14 +120,14 @@ public class ChessGameFrame extends JFrame {
 //    }
 
     private void addbackground() {
-        ImageIcon picture=new ImageIcon("./src/d.jpg");
+        ImageIcon picture=new ImageIcon("D:\\IntelliJ IDEA Projects\\DarkChess3\\DarkChess2\\src\\d.jpg");
         JLabel label=new JLabel(picture);
         label.setLocation(0,0);
         label.setSize(this.WIDTH,this.HEIGHT );
         add(label);
     }
     private void addDiedRedPic() {
-        ImageIcon icon = new ImageIcon("./src/x.jpg");
+        ImageIcon icon = new ImageIcon("D:\\IntelliJ IDEA Projects\\DarkChess3\\DarkChess2\\src\\x.jpg");
         Image image = icon.getImage();
         Image newImage = image.getScaledInstance(CHESSBOARD_SIZE / 8, CHESSBOARD_SIZE*7/8 ,Image.SCALE_DEFAULT );
         icon = new ImageIcon(newImage);
@@ -129,7 +138,7 @@ public class ChessGameFrame extends JFrame {
         add(label);
     }
     private void addDiedBlackPic() {
-        ImageIcon icon = new ImageIcon("./src/y.jpg");
+        ImageIcon icon = new ImageIcon("D:\\IntelliJ IDEA Projects\\DarkChess3\\DarkChess2\\src\\y.jpg");
         Image image = icon.getImage();
         Image newImage = image.getScaledInstance(CHESSBOARD_SIZE / 8, CHESSBOARD_SIZE*7/8 , Image.SCALE_DEFAULT);
         icon = new ImageIcon(newImage);
@@ -261,6 +270,34 @@ public class ChessGameFrame extends JFrame {
         add(statusLabel);
     }
 
+    public static int getCounter() {
+        return counter;
+    }
+
+    public static void setCounter(int counter) {
+        ChessGameFrame.counter = counter;
+    }
+
+    private void addTimeLabel() {
+
+        timeLabel = new JLabel("Time: 00:00");
+        timeLabel.setLocation((WIDTH-288) * 3 / 5+288, HEIGHT / 10+420+20+80);/////////////////////////////////////////////////////////////
+        timeLabel.setSize(200, 60);
+        timeLabel.setFont(new Font("Rockwell", Font.BOLD, 20));
+        Timer timer = new Timer(1000, new ActionListener() {
+//            int count = 0;
+            public void actionPerformed(ActionEvent e) {
+//                count++;
+                setCounter(getCounter()+1);
+                int minute=Chessgamebegin.getCounter()/60;
+                int second=Chessgamebegin.getCounter()%60;
+//                Integer.toString(getCounter())
+                timeLabel.setText(String.format("Time: %02d:%02d",minute,second));
+            }
+        });
+        timer.start();
+        add(timeLabel);
+    }
     public static JLabel getStatusLabel() {
         return statusLabel;
     }
@@ -276,6 +313,27 @@ public class ChessGameFrame extends JFrame {
         button.setSize(180, 60);
         button.setFont(new Font("Rockwell", Font.BOLD, 20));
         add(button);
+    }
+
+    private void addCheatingButton() {
+        AtomicInteger num= new AtomicInteger();
+        JButton button = new JButton("Cheating");
+        button.setLocation((WIDTH-288) * 3 / 5+288, HEIGHT / 10 + 60);
+        button.setSize(180, 60);
+        button.setFont(new Font("Rockwell", Font.BOLD, 20));
+        button.setBackground(Color.LIGHT_GRAY);
+        add(button);
+        button.addActionListener(e ->{
+            num.getAndIncrement();
+            if(num.get() %2==1){
+                System.out.println("Cheating");
+                Chessboard.Ischeating();
+            }
+            else{
+                System.out.println("Close Cheating");
+                Chessboard.Isnotcheating();
+            }
+        });
     }
 
 
@@ -367,6 +425,7 @@ public class ChessGameFrame extends JFrame {
     private void addReplayButton() {
         JButton button = new JButton("Replay");
         button.addActionListener((e) -> {
+            Chessgamebegin.setCounter(0);
             ChessGameFrame.setRedScore(0);
             ChessGameFrame.setBlackScore(0);
             ChessGameFrame.setDiedBlackGeneral(0);

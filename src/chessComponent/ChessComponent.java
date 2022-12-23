@@ -20,7 +20,7 @@ public class ChessComponent extends SquareComponent{
         //绘制棋子填充色
         g.setColor(Color.ORANGE);
         g.fillOval(spacingLength, spacingLength, this.getWidth() - 2 * spacingLength, this.getHeight() - 2 * spacingLength);
-       //绘制棋子边框
+        //绘制棋子边框
         g.setColor(Color.DARK_GRAY);
         g.drawOval(spacingLength, spacingLength, getWidth() - 2 * spacingLength, getHeight() - 2 * spacingLength);
 
@@ -37,6 +37,18 @@ public class ChessComponent extends SquareComponent{
                 g2.setStroke(new BasicStroke(4f));
                 g2.drawOval(spacingLength, spacingLength, getWidth() - 2 * spacingLength, getHeight() - 2 * spacingLength);
             }
+            if(isReversalcheat()){
+                g.setColor(Color.BLUE);
+                Graphics2D g2 = (Graphics2D) g;
+                g2.setStroke(new BasicStroke(4f));
+                g2.drawOval(spacingLength, spacingLength, getWidth() - 2 * spacingLength, getHeight() - 2 * spacingLength);
+            }
+        }
+        if(isIfcanmove()){
+            g.setColor(Color.GREEN);
+            Graphics2D g2 = (Graphics2D) g;
+            g2.setStroke(new BasicStroke(4f));
+            g2.drawOval(spacingLength, spacingLength, getWidth() - 2 * spacingLength, getHeight() - 2 * spacingLength);
         }
     }
 

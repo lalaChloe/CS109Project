@@ -4,6 +4,7 @@ import controller.GameController;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 
 /**
  * 这个类表示游戏窗体，窗体上包含：
@@ -54,6 +55,7 @@ public class ChessGameFrame extends JFrame {
     private static int diedBlackCannon;
 
     public static int indexOfIfFirst=0;
+    public static ArrayList<String> CurrentBoard=new ArrayList<>();
 
     public ChessGameFrame(int width, int height) {
         setTitle("2022 CS109 Project Demo"); //设置标题
@@ -67,10 +69,11 @@ public class ChessGameFrame extends JFrame {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE); //设置程序关闭按键，如果点击右上方的叉就游戏全部关闭了
         setLayout(null);
 
+        addLoadButton();
         addChessboard();
         addLabel();
 //        addHelloButton();
-        addLoadButton();
+
         addRedScoreLabel();
         addBlackScoreLabel();
         addReplayButton();
@@ -238,6 +241,7 @@ public class ChessGameFrame extends JFrame {
      */
     private void addChessboard() {
         Chessboard chessboard = new Chessboard(CHESSBOARD_SIZE / 2, CHESSBOARD_SIZE);
+        ChessGameFrame.CurrentBoard.add(chessboard.turnChessToIndex());
         gameController = new GameController(chessboard,this);
         chessboard.setLocation(HEIGHT / 10+144, HEIGHT / 10);///////////////////////////////////////////////////////////////////////
         add(chessboard);
@@ -330,8 +334,25 @@ public class ChessGameFrame extends JFrame {
     private void addReplayButton() {
         JButton button = new JButton("Replay");
         button.addActionListener((e) -> {
+            ChessGameFrame.setRedScore(0);
+            ChessGameFrame.setBlackScore(0);
+            ChessGameFrame.setDiedBlackGeneral(0);
+            ChessGameFrame.setDiedBlackAdvisor(0);
+            ChessGameFrame.setDiedBlackMinister(0);
+            ChessGameFrame.setDiedBlackChariot(0);
+            ChessGameFrame.setDiedBlackHorse(0);
+            ChessGameFrame.setDiedBlackSoldier(0);
+            ChessGameFrame.setDiedBlackCannon(0);
+            ChessGameFrame.setDiedRedGeneral(0);
+            ChessGameFrame.setDiedRedAdvisor(0);
+            ChessGameFrame.setDiedRedMinister(0);
+            ChessGameFrame.setDiedRedChariot(0);
+            ChessGameFrame.setDiedRedHorse(0);
+            ChessGameFrame.setDiedRedSoldier(0);
+            ChessGameFrame.setDiedRedCannon(0);
+            setIndexOfIfFirst(0);
+            ChessGameFrame.CurrentBoard.clear();
             this.setVisible(false);
-
             System.out.println("Replay");
 
             this.addWindowListener(new java.awt.event.WindowAdapter() {
@@ -591,6 +612,14 @@ public class ChessGameFrame extends JFrame {
 
     public static JLabel getLabel14() {
         return label14;
+    }
+
+    public static int getIndexOfIfFirst() {
+        return indexOfIfFirst;
+    }
+
+    public static void setIndexOfIfFirst(int indexOfIfFirst) {
+        ChessGameFrame.indexOfIfFirst = indexOfIfFirst;
     }
 }
 

@@ -10,6 +10,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -118,9 +119,9 @@ public class Chessboard extends JComponent {
             if (chess2.getChessColor()==ChessColor.BLACK){
                 if (chess2 instanceof GeneralChessComponent){
                     ChessGameFrame.setDiedBlackGeneral(ChessGameFrame.getDiedBlackGeneral()+1);
-                } else if (chess2 instanceof AdvisorChessComponent) {
+                }else if (chess2 instanceof AdvisorChessComponent) {
                     ChessGameFrame.setDiedBlackAdvisor(ChessGameFrame.getDiedBlackAdvisor()+1);
-                } else if (chess2 instanceof MinisterChessComponent) {
+                }else if (chess2 instanceof MinisterChessComponent) {
                     ChessGameFrame.setDiedBlackMinister(ChessGameFrame.getDiedBlackMinister()+1);
                 }else if (chess2 instanceof ChariotChessComponent) {
                     ChessGameFrame.setDiedBlackChariot(ChessGameFrame.getDiedBlackChariot()+1);
@@ -175,22 +176,20 @@ public class Chessboard extends JComponent {
             player1.over();
             player2.setVolumn(6f).play();
         }
-        if (getRedScore()>=1){
+        if (getRedScore()>=60){
             player2.over();
             System.out.println("Replay");
             JOptionPane.showMessageDialog(this, "红方赢！");
             ChessGameFrameWin mainFrame = new ChessGameFrameWin(720, 720);
             mainFrame.setVisible(true);
-
         }
 
-        if (getBlackScore()>=1) {
+        if (getBlackScore()>=60) {
             player2.over();
             System.out.println("Replay");
             JOptionPane.showMessageDialog(this, "黑方赢！");
             ChessGameFrameWin mainFrame = new ChessGameFrameWin(720, 720);
             mainFrame.setVisible(true);
-
         }
 
         //只重新绘制chess1 chess2，其他不变
@@ -417,7 +416,6 @@ public class Chessboard extends JComponent {
                     case 'b':numB++;break;
                     case 'c':numC++;break;
                     case 'd':numD++;break;
-                    default:checkChessNumIsOk=false;break;
                 }
             }
             if (num1>1||num2>2||num3>2||num4>2||num5>2||num6>5||num7>2||num8>1||num9>2||num0>2||numA>2||numB>2||numC>5||numD>2)checkChessNumIsOk=false;
@@ -441,5 +439,87 @@ public class Chessboard extends JComponent {
             ChessGameFrame.setBlackScore(blackScore);
         }
 //        chessData.forEach(System.out::println);
+    }
+    public String turnChessToIndex(){
+        String chessIndexS="";
+        for (int i=0;i<8;i++){
+            for (int j=0;j<4;j++){
+                SquareComponent chess2=squareComponents[i][j];
+                if (chess2 instanceof EmptySlotComponent){
+                    chessIndexS=chessIndexS+"x0 ";
+                }else if (chess2.isReversal()){
+                    if (chess2.getChessColor()==ChessColor.RED){
+                        if (chess2 instanceof GeneralChessComponent){
+                            chessIndexS=chessIndexS+"11 ";
+                        }else if (chess2 instanceof AdvisorChessComponent) {
+                            chessIndexS=chessIndexS+"21 ";
+                        }else if (chess2 instanceof MinisterChessComponent) {
+                            chessIndexS=chessIndexS+"31 ";
+                        }else if (chess2 instanceof ChariotChessComponent) {
+                            chessIndexS=chessIndexS+"41 ";
+                        }else if (chess2 instanceof HorseChessComponent) {
+                            chessIndexS=chessIndexS+"51 ";
+                        }else if (chess2 instanceof SoldierChessComponent) {
+                            chessIndexS=chessIndexS+"61 ";
+                        }else if (chess2 instanceof CannonChessComponent) {
+                            chessIndexS=chessIndexS+"71 ";
+                        }
+                        //计分
+                    }else if (chess2.getChessColor()==ChessColor.BLACK){
+                        if (chess2 instanceof GeneralChessComponent){
+                            chessIndexS=chessIndexS+"81 ";
+                        } else if (chess2 instanceof AdvisorChessComponent) {
+                            chessIndexS=chessIndexS+"91 ";
+                        } else if (chess2 instanceof MinisterChessComponent) {
+                            chessIndexS=chessIndexS+"01 ";
+                        }else if (chess2 instanceof ChariotChessComponent) {
+                            chessIndexS=chessIndexS+"a1 ";
+                        }else if (chess2 instanceof HorseChessComponent) {
+                            chessIndexS=chessIndexS+"b1 ";
+                        }else if (chess2 instanceof SoldierChessComponent) {
+                            chessIndexS=chessIndexS+"c1 ";
+                        }else if (chess2 instanceof CannonChessComponent) {
+                            chessIndexS=chessIndexS+"d1 ";
+                            }
+                        }
+                }else {
+                    if (chess2.getChessColor()==ChessColor.RED){
+                        if (chess2 instanceof GeneralChessComponent){
+                            chessIndexS=chessIndexS+"10 ";
+                        }else if (chess2 instanceof AdvisorChessComponent) {
+                            chessIndexS=chessIndexS+"20 ";
+                        }else if (chess2 instanceof MinisterChessComponent) {
+                            chessIndexS=chessIndexS+"30 ";
+                        }else if (chess2 instanceof ChariotChessComponent) {
+                            chessIndexS=chessIndexS+"40 ";
+                        }else if (chess2 instanceof HorseChessComponent) {
+                            chessIndexS=chessIndexS+"50 ";
+                        }else if (chess2 instanceof SoldierChessComponent) {
+                            chessIndexS=chessIndexS+"60 ";
+                        }else if (chess2 instanceof CannonChessComponent) {
+                            chessIndexS=chessIndexS+"70 ";
+                        }
+                        //计分
+                    }else if (chess2.getChessColor()==ChessColor.BLACK){
+                        if (chess2 instanceof GeneralChessComponent){
+                            chessIndexS=chessIndexS+"80 ";
+                        } else if (chess2 instanceof AdvisorChessComponent) {
+                            chessIndexS=chessIndexS+"90 ";
+                        } else if (chess2 instanceof MinisterChessComponent) {
+                            chessIndexS=chessIndexS+"00 ";
+                        }else if (chess2 instanceof ChariotChessComponent) {
+                            chessIndexS=chessIndexS+"a0 ";
+                        }else if (chess2 instanceof HorseChessComponent) {
+                            chessIndexS=chessIndexS+"b0 ";
+                        }else if (chess2 instanceof SoldierChessComponent) {
+                            chessIndexS=chessIndexS+"c0 ";
+                        }else if (chess2 instanceof CannonChessComponent) {
+                            chessIndexS=chessIndexS+"d0 ";
+                        }
+                    }
+                }
+            }
+        }
+        return chessIndexS;
     }
 }

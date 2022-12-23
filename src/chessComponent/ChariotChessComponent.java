@@ -23,8 +23,8 @@ public class ChariotChessComponent extends ChessComponent {
     }
     public ChariotChessComponent(int indexOfReversal, ChessboardPoint chessboardPoint, Point location, ChessColor chessColor, ClickController clickController, int size) {
         super(chessboardPoint, location, chessColor, clickController, size);
-        this.power=5;
-        this.score=10;
+        this.power=3;
+        this.score=5;
         if (this.getChessColor() == ChessColor.RED) {
             name = "俥";
         } else {

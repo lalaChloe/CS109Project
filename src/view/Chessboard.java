@@ -510,7 +510,7 @@ public class Chessboard extends JComponent {
         }
 
 
-        if (checkChessNumIsOk&&checkCurrentPlayerExist&&checkBoardForm){
+        if (checkChessNumIsOk&&checkCurrentPlayerExist&&checkBoardForm&&checkStepsIsOk){
             ChessGameFrame.setRedScore(0);
             ChessGameFrame.setBlackScore(0);
             ChessGameFrame.setDiedBlackGeneral(0);

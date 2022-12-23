@@ -42,7 +42,7 @@ public class ClickController {
                 //repaint in swap chess method.
                 if (Math.abs(first.getPower())>=squareComponent.getPower()||first.getPower()-squareComponent.getPower()==-5){
                     chessboard.swapChessComponents(first, squareComponent);
-                    //todo
+                    ChessGameFrame.CurrentBoard.add(chessboard.turnChessToIndex());
                     chessboard.clickController.swapPlayer();
                     first.setSelected(false);
                     first = null;
@@ -61,12 +61,14 @@ public class ClickController {
         if (!squareComponent.isReversal()) {
             if (ChessGameFrame.indexOfIfFirst!=0){
             squareComponent.setReversal(true);
+            ChessGameFrame.CurrentBoard.add(chessboard.turnChessToIndex());
             System.out.printf("onClick to reverse a chess [%d,%d]\n", squareComponent.getChessboardPoint().getX(), squareComponent.getChessboardPoint().getY());
             squareComponent.repaint();
             chessboard.clickController.swapPlayer();
             return false;
             }else {
                 squareComponent.setReversal(true);
+                ChessGameFrame.CurrentBoard.add(chessboard.turnChessToIndex());
                 System.out.printf("onClick to reverse a chess [%d,%d]\n", squareComponent.getChessboardPoint().getX(), squareComponent.getChessboardPoint().getY());
                 squareComponent.repaint();
                 if (squareComponent.getChessColor()==ChessColor.RED){

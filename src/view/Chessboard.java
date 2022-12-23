@@ -10,6 +10,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -118,9 +119,9 @@ public class Chessboard extends JComponent {
             if (chess2.getChessColor()==ChessColor.BLACK){
                 if (chess2 instanceof GeneralChessComponent){
                     ChessGameFrame.setDiedBlackGeneral(ChessGameFrame.getDiedBlackGeneral()+1);
-                } else if (chess2 instanceof AdvisorChessComponent) {
+                }else if (chess2 instanceof AdvisorChessComponent) {
                     ChessGameFrame.setDiedBlackAdvisor(ChessGameFrame.getDiedBlackAdvisor()+1);
-                } else if (chess2 instanceof MinisterChessComponent) {
+                }else if (chess2 instanceof MinisterChessComponent) {
                     ChessGameFrame.setDiedBlackMinister(ChessGameFrame.getDiedBlackMinister()+1);
                 }else if (chess2 instanceof ChariotChessComponent) {
                     ChessGameFrame.setDiedBlackChariot(ChessGameFrame.getDiedBlackChariot()+1);
@@ -175,22 +176,20 @@ public class Chessboard extends JComponent {
             player1.over();
             player2.setVolumn(6f).play();
         }
-        if (getRedScore()>=1){
+        if (getRedScore()>=60){
             player2.over();
             System.out.println("Replay");
             JOptionPane.showMessageDialog(this, "红方赢！");
             ChessGameFrameWin mainFrame = new ChessGameFrameWin(720, 720);
             mainFrame.setVisible(true);
-
         }
 
-        if (getBlackScore()>=1) {
+        if (getBlackScore()>=60) {
             player2.over();
             System.out.println("Replay");
             JOptionPane.showMessageDialog(this, "黑方赢！");
             ChessGameFrameWin mainFrame = new ChessGameFrameWin(720, 720);
             mainFrame.setVisible(true);
-
         }
 
         //只重新绘制chess1 chess2，其他不变
@@ -365,7 +364,63 @@ public class Chessboard extends JComponent {
             }
         }
     }
+    public void regret(){
+        String[] chessS =CurrentBoard.get(CurrentBoard.size()-2).split(" ");
+        loadChessOnBoard(chessS);
+        CurrentBoard.remove(CurrentBoard.size()-1);
+        int redScore=0;
+        int blackScore=0;
+        int num1=0;int num2=0;int num3=0;int num4=0;int num5=0;int num6=0;int num7=0;int num8=0;int num9=0;int num0=0;int numA=0;int numB=0;int numC=0;int numD=0;
+        for (int i=0;i<32;i++){
+            char a=chessS[i].charAt(0);
+            switch (a){
+                case '1':num1++;break;
+                case '2':num2++;break;
+                case '3':num3++;break;
+                case '4':num4++;break;
+                case '5':num5++;break;
+                case '6':num6++;break;
+                case '7':num7++;break;
+                case '8':num8++;break;
+                case '9':num9++;break;
+                case '0':num0++;break;
+                case 'a':numA++;break;
+                case 'b':numB++;break;
+                case 'c':numC++;break;
+                case 'd':numD++;break;
+            }
+        }
+        ChessGameFrame.setDiedRedGeneral(1-num1);
+        ChessGameFrame.setDiedRedAdvisor(2-num2);
+        ChessGameFrame.setDiedRedMinister(2-num3);
+        ChessGameFrame.setDiedRedChariot(2-num4);
+        ChessGameFrame.setDiedRedHorse(2-num5);
+        ChessGameFrame.setDiedRedSoldier(5-num6);
+        ChessGameFrame.setDiedRedCannon(2-num7);
+        ChessGameFrame.setDiedBlackGeneral(1-num8);
+        ChessGameFrame.setDiedBlackAdvisor(2-num9);
+        ChessGameFrame.setDiedBlackMinister(2-num0);
+        ChessGameFrame.setDiedBlackChariot(2-numA);
+        ChessGameFrame.setDiedBlackHorse(2-numB);
+        ChessGameFrame.setDiedBlackSoldier(5-numC);
+        ChessGameFrame.setDiedBlackCannon(2-numD);
 
+        if (currentColor.equals(ChessColor.RED)){
+            setCurrentColor(ChessColor.BLACK);
+        } else if (currentColor.equals(ChessColor.BLACK)) {
+            setCurrentColor(ChessColor.RED);
+        }
+//(currentColor.equals(ChessColor.BLACK))setCurrentColor(ChessColor.RED);
+        blackScore=30*ChessGameFrame.getDiedRedGeneral()+10*ChessGameFrame.getDiedRedAdvisor()+5*(ChessGameFrame.getDiedRedMinister()+ChessGameFrame.getDiedRedChariot()+ChessGameFrame.getDiedRedHorse()+ChessGameFrame.getDiedRedCannon())+ChessGameFrame.getDiedRedSoldier();
+        redScore=30*ChessGameFrame.getDiedBlackGeneral()+10*ChessGameFrame.getDiedBlackAdvisor()+5*(ChessGameFrame.getDiedBlackMinister()+ChessGameFrame.getDiedBlackChariot()+ChessGameFrame.getDiedBlackHorse()+ChessGameFrame.getDiedBlackCannon())+ChessGameFrame.getDiedBlackSoldier();
+        ChessGameFrame.setRedScore(redScore);
+        ChessGameFrame.setBlackScore(blackScore);
+
+
+        ChangeShownScore();
+        ChangeShownDiedChess();
+        ChessGameFrame.getStatusLabel().setText(String.format("%s's TURN", getCurrentColor().getName()));
+    }
     /**
      * 绘制棋盘格子
      * @param g
@@ -397,7 +452,7 @@ public class Chessboard extends JComponent {
         boolean checkChessNumIsOk=true;
         int num1=0;int num2=0;int num3=0;int num4=0;int num5=0;int num6=0;int num7=0;int num8=0;int num9=0;int num0=0;int numA=0;int numB=0;int numC=0;int numD=0;
         if (chessS.length!=32){
-            JOptionPane.showMessageDialog(this,"ERROR:102");
+//            JOptionPane.showMessageDialog(this,"ERROR:102");
             checkBoardForm=false;
         } else  {
             for (int i=0;i<32;i++){
@@ -417,29 +472,177 @@ public class Chessboard extends JComponent {
                     case 'b':numB++;break;
                     case 'c':numC++;break;
                     case 'd':numD++;break;
-                    default:checkChessNumIsOk=false;break;
                 }
             }
             if (num1>1||num2>2||num3>2||num4>2||num5>2||num6>5||num7>2||num8>1||num9>2||num0>2||numA>2||numB>2||numC>5||numD>2)checkChessNumIsOk=false;
-            if (!checkChessNumIsOk)JOptionPane.showMessageDialog(this,"ERROR:103");
+//            if (!checkChessNumIsOk)JOptionPane.showMessageDialog(this,"ERROR:103");
         }
         String currentPlayer=chessData.get(1);
         char[] secondLine=currentPlayer.toCharArray();
         boolean checkCurrentPlayerExist=true;
         if (secondLine.length!=1)checkCurrentPlayerExist=false;
         if (secondLine[0]!='R'&&secondLine[0]!='B')checkCurrentPlayerExist=false;
-        if (!checkCurrentPlayerExist)JOptionPane.showMessageDialog(this,"ERROR:104");
+//        if (!checkCurrentPlayerExist)JOptionPane.showMessageDialog(this,"ERROR:104");
+
+        boolean checkStepsIsOk=true;
+        ArrayList<String> checkList=new ArrayList<>();
+        for (int i=4;i<chessData.size();i++){
+            checkList.add(chessData.get(i));
+        }
+        for (int i=0;i<checkList.size()-1;i++){
+            String[] step1 =checkList.get(i).split(" ");
+            String[] step2 =checkList.get(i+1).split(" ");
+            int counter=0;
+            for (int j=0;j<32;j++){
+                if (!step1[j].equals(step2[j]))counter++;
+            }
+            if (counter>2)checkStepsIsOk=false;
+        }
+//        if (!checkStepsIsOk)JOptionPane.showMessageDialog(this,"ERROR:105");
+        if (!checkBoardForm){
+            JOptionPane.showMessageDialog(this,"ERROR:102");
+        } else if (!checkChessNumIsOk) {
+            JOptionPane.showMessageDialog(this,"ERROR:103");
+        } else if (!checkCurrentPlayerExist) {
+            JOptionPane.showMessageDialog(this,"ERROR:104");
+        } else if (!checkStepsIsOk) {
+            JOptionPane.showMessageDialog(this,"ERROR:105");
+        }
 
 
         if (checkChessNumIsOk&&checkCurrentPlayerExist&&checkBoardForm){
+            ChessGameFrame.setRedScore(0);
+            ChessGameFrame.setBlackScore(0);
+            ChessGameFrame.setDiedBlackGeneral(0);
+            ChessGameFrame.setDiedBlackAdvisor(0);
+            ChessGameFrame.setDiedBlackMinister(0);
+            ChessGameFrame.setDiedBlackChariot(0);
+            ChessGameFrame.setDiedBlackHorse(0);
+            ChessGameFrame.setDiedBlackSoldier(0);
+            ChessGameFrame.setDiedBlackCannon(0);
+            ChessGameFrame.setDiedRedGeneral(0);
+            ChessGameFrame.setDiedRedAdvisor(0);
+            ChessGameFrame.setDiedRedMinister(0);
+            ChessGameFrame.setDiedRedChariot(0);
+            ChessGameFrame.setDiedRedHorse(0);
+            ChessGameFrame.setDiedRedSoldier(0);
+            ChessGameFrame.setDiedRedCannon(0);
+//            setIndexOfIfFirst(0);
+
             loadChessOnBoard(chessS);
             if (secondLine[0]=='R')setCurrentColor(ChessColor.RED);
             if (secondLine[0]=='B')setCurrentColor(ChessColor.BLACK);
+            ChessGameFrame.getStatusLabel().setText(String.format("%s's TURN", getCurrentColor().getName()));
             int redScore=Integer.parseInt(chessData.get(2));
             int blackScore=Integer.parseInt(chessData.get(3));
             ChessGameFrame.setRedScore(redScore);
             ChessGameFrame.setBlackScore(blackScore);
+
+            ChessGameFrame.setDiedRedGeneral(1-num1);
+            ChessGameFrame.setDiedRedAdvisor(2-num2);
+            ChessGameFrame.setDiedRedMinister(2-num3);
+            ChessGameFrame.setDiedRedChariot(2-num4);
+            ChessGameFrame.setDiedRedHorse(2-num5);
+            ChessGameFrame.setDiedRedSoldier(5-num6);
+            ChessGameFrame.setDiedRedCannon(2-num7);
+            ChessGameFrame.setDiedBlackGeneral(1-num8);
+            ChessGameFrame.setDiedBlackAdvisor(2-num9);
+            ChessGameFrame.setDiedBlackMinister(2-num0);
+            ChessGameFrame.setDiedBlackChariot(2-numA);
+            ChessGameFrame.setDiedBlackHorse(2-numB);
+            ChessGameFrame.setDiedBlackSoldier(5-numC);
+            ChessGameFrame.setDiedBlackCannon(2-numD);
+            //todo:load CurrentBoard
+            ChessGameFrame.CurrentBoard.clear();
+            for (int i=4;i<chessData.size();i++){
+                CurrentBoard.add(chessData.get(i));
+            }
+
+            ChangeShownScore();
+            ChangeShownDiedChess();
         }
 //        chessData.forEach(System.out::println);
+    }
+    public String turnChessToIndex(){
+        String chessIndexS="";
+        for (int i=0;i<8;i++){
+            for (int j=0;j<4;j++){
+                SquareComponent chess2=squareComponents[i][j];
+                if (chess2 instanceof EmptySlotComponent){
+                    chessIndexS=chessIndexS+"x0 ";
+                }else if (chess2.isReversal()){
+                    if (chess2.getChessColor()==ChessColor.RED){
+                        if (chess2 instanceof GeneralChessComponent){
+                            chessIndexS=chessIndexS+"11 ";
+                        }else if (chess2 instanceof AdvisorChessComponent) {
+                            chessIndexS=chessIndexS+"21 ";
+                        }else if (chess2 instanceof MinisterChessComponent) {
+                            chessIndexS=chessIndexS+"31 ";
+                        }else if (chess2 instanceof ChariotChessComponent) {
+                            chessIndexS=chessIndexS+"41 ";
+                        }else if (chess2 instanceof HorseChessComponent) {
+                            chessIndexS=chessIndexS+"51 ";
+                        }else if (chess2 instanceof SoldierChessComponent) {
+                            chessIndexS=chessIndexS+"61 ";
+                        }else if (chess2 instanceof CannonChessComponent) {
+                            chessIndexS=chessIndexS+"71 ";
+                        }
+                        //计分
+                    }else if (chess2.getChessColor()==ChessColor.BLACK){
+                        if (chess2 instanceof GeneralChessComponent){
+                            chessIndexS=chessIndexS+"81 ";
+                        } else if (chess2 instanceof AdvisorChessComponent) {
+                            chessIndexS=chessIndexS+"91 ";
+                        } else if (chess2 instanceof MinisterChessComponent) {
+                            chessIndexS=chessIndexS+"01 ";
+                        }else if (chess2 instanceof ChariotChessComponent) {
+                            chessIndexS=chessIndexS+"a1 ";
+                        }else if (chess2 instanceof HorseChessComponent) {
+                            chessIndexS=chessIndexS+"b1 ";
+                        }else if (chess2 instanceof SoldierChessComponent) {
+                            chessIndexS=chessIndexS+"c1 ";
+                        }else if (chess2 instanceof CannonChessComponent) {
+                            chessIndexS=chessIndexS+"d1 ";
+                            }
+                        }
+                }else {
+                    if (chess2.getChessColor()==ChessColor.RED){
+                        if (chess2 instanceof GeneralChessComponent){
+                            chessIndexS=chessIndexS+"10 ";
+                        }else if (chess2 instanceof AdvisorChessComponent) {
+                            chessIndexS=chessIndexS+"20 ";
+                        }else if (chess2 instanceof MinisterChessComponent) {
+                            chessIndexS=chessIndexS+"30 ";
+                        }else if (chess2 instanceof ChariotChessComponent) {
+                            chessIndexS=chessIndexS+"40 ";
+                        }else if (chess2 instanceof HorseChessComponent) {
+                            chessIndexS=chessIndexS+"50 ";
+                        }else if (chess2 instanceof SoldierChessComponent) {
+                            chessIndexS=chessIndexS+"60 ";
+                        }else if (chess2 instanceof CannonChessComponent) {
+                            chessIndexS=chessIndexS+"70 ";
+                        }
+                        //计分
+                    }else if (chess2.getChessColor()==ChessColor.BLACK){
+                        if (chess2 instanceof GeneralChessComponent){
+                            chessIndexS=chessIndexS+"80 ";
+                        } else if (chess2 instanceof AdvisorChessComponent) {
+                            chessIndexS=chessIndexS+"90 ";
+                        } else if (chess2 instanceof MinisterChessComponent) {
+                            chessIndexS=chessIndexS+"00 ";
+                        }else if (chess2 instanceof ChariotChessComponent) {
+                            chessIndexS=chessIndexS+"a0 ";
+                        }else if (chess2 instanceof HorseChessComponent) {
+                            chessIndexS=chessIndexS+"b0 ";
+                        }else if (chess2 instanceof SoldierChessComponent) {
+                            chessIndexS=chessIndexS+"c0 ";
+                        }else if (chess2 instanceof CannonChessComponent) {
+                            chessIndexS=chessIndexS+"d0 ";
+                        }
+                    }
+                }
+            }
+        }
+        return chessIndexS;
     }
 }

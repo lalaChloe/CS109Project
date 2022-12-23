@@ -17,8 +17,8 @@ public class GeneralChessComponent extends ChessComponent {
     }
     public GeneralChessComponent(int indexOfReversal, ChessboardPoint chessboardPoint, Point location, ChessColor chessColor, ClickController clickController, int size) {
         super(chessboardPoint, location, chessColor, clickController, size);
-        this.power=5;
-        this.score=10;
+        this.power=6;
+        this.score=30;
         if (this.getChessColor() == ChessColor.RED) {
             name = "帅";
         } else {

@@ -17,8 +17,8 @@ public class CannonChessComponent extends ChessComponent {
     }
     public CannonChessComponent(int indexOfReversal, ChessboardPoint chessboardPoint, Point location, ChessColor chessColor, ClickController clickController, int size) {
         super(chessboardPoint, location, chessColor, clickController, size);
-        this.power=5;
-        this.score=10;
+        this.power=-100;
+        this.score=5;
         if (this.getChessColor() == ChessColor.RED) {
             name = "炮";
         } else {

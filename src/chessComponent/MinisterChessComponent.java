@@ -17,8 +17,8 @@ public class MinisterChessComponent extends ChessComponent {
     }
     public MinisterChessComponent(int indexOfReversal, ChessboardPoint chessboardPoint, Point location, ChessColor chessColor, ClickController clickController, int size) {
         super(chessboardPoint, location, chessColor, clickController, size);
-        this.power=5;
-        this.score=10;
+        this.power=4;
+        this.score=5;
         if (this.getChessColor() == ChessColor.RED) {
             name = "相";
         } else {

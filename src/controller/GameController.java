@@ -1,11 +1,14 @@
 package controller;
 
+import model.ChessColor;
 import view.ChessGameFrame;
 import view.Chessboard;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -31,7 +34,7 @@ public class GameController {
             if (!newBee[1].equals("txt")){
                 JOptionPane.showMessageDialog(chessGameFrame,"ERROR:101");
             }
-            path="./src/"+path;
+//            path="./src/"+path;
             List<String> chessData = Files.readAllLines(Path.of(path));
             chessboard.loadGame(chessData);
             return chessData;
@@ -44,5 +47,37 @@ public class GameController {
         }
         return null;
     }
+    public void regretOperation(){
+        chessboard.regret();
+    }
+    public void saveGameToFile(String fileName){
+        String text = "This is a sample text.";
 
+        try {
+            // Create a new BufferedWriter object
+            BufferedWriter writer = new BufferedWriter(new FileWriter(fileName));
+
+            // Write the text to the file
+            writer.write(ChessGameFrame.CurrentBoard.get(ChessGameFrame.CurrentBoard.size()-1));
+            writer.newLine();
+            if (chessboard.getCurrentColor()== ChessColor.RED){
+                writer.write("R");
+            } else if (chessboard.getCurrentColor()==ChessColor.BLACK) {
+                writer.write("B");
+            }
+            writer.newLine();
+            writer.write(String.format("%d",ChessGameFrame.getRedScore()));
+            writer.newLine();
+            writer.write(String.format("%d",ChessGameFrame.getBlackScore()));
+            for (int i=0;i<ChessGameFrame.CurrentBoard.size();i++){
+                writer.newLine();
+                writer.write(ChessGameFrame.CurrentBoard.get(i));
+            }
+
+            // Close the writer
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
